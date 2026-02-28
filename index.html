@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Karthikeyan P — Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- React + ReactDOM -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<!-- Babel -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { poppins: ['Poppins','sans-serif'] },
+      colors: {
+        bg:     '#020816',
+        surface:'#050f27',
+        card:   '#071232',
+        cardHov:'#0c1a45',
+        teal:   '#4f8ef7',
+        tealD:  '#2563eb',
+        tealDim:'rgba(79,142,247,0.12)',
+        cyan:   '#818cf8',
+        gold:   '#f59e0b',
+        rose:   '#fb7185',
+        muted:  '#64748b',
+        dim:    '#94a3b8',
+        bright: '#e8f0ff',
+        line:   'rgba(79,142,247,0.15)',
+      },
+      boxShadow: {
+        teal:   '0 0 30px rgba(79,142,247,0.28)',
+        tealLg: '0 0 60px rgba(79,142,247,0.20)',
+        card:   '0 8px 40px rgba(0,0,0,0.55)',
+      }
+    }
+  }
+}
+</script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--teal:#4f8ef7;--gold:#f59e0b;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:#020816;color:#e8f0ff;overflow-x:hidden;cursor:none;}
+::selection{background:#4f8ef7;color:#fff;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:#020816;}
+::-webkit-scrollbar-thumb{background:#4f8ef7;border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:#818cf8;}
+#cursor{position:fixed;width:10px;height:10px;border-radius:50%;background:#4f8ef7;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+#cursor-ring{position:fixed;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(79,142,247,.5);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;opacity:.022;pointer-events:none;z-index:998;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.orb1{width:700px;height:700px;background:rgba(37,99,235,.09);top:-200px;left:-200px;}
+.orb2{width:500px;height:500px;background:rgba(124,58,237,.07);bottom:-100px;right:-100px;}
+.orb3{width:400px;height:400px;background:rgba(79,142,247,.05);top:50%;left:50%;transform:translate(-50%,-50%);}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);background-size:55px 55px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 40%,transparent 100%);}
+.nav-glass{background:rgba(2,8,22,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(79,142,247,.14);}
+.hero-gradient{background:linear-gradient(135deg,#4f8ef7 0%,#818cf8 45%,#2563eb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.gold-gradient{background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.type-cursor::after{content:'|';color:#4f8ef7;animation:blink .8s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.reveal{opacity:0;transform:translateY(40px);}
+.reveal-left{opacity:0;transform:translateX(-40px);}
+.reveal-scale{opacity:0;transform:scale(.9);}
+.skill-bar-bg{background:rgba(79,142,247,.08);border-radius:4px;overflow:hidden;}
+.skill-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#2563eb,#818cf8);width:0%;transition:width 1.5s cubic-bezier(.16,1,.3,1);position:relative;}
+.skill-bar-fill::after{content:'';position:absolute;right:0;top:-3px;width:10px;height:10px;border-radius:50%;background:#4f8ef7;box-shadow:0 0 10px #4f8ef7;}
+.exp-tab.active{color:#4f8ef7;border-left-color:#4f8ef7;background:rgba(79,142,247,.07);}
+.exp-tab{border-left:2px solid rgba(255,255,255,.08);transition:all .3s;cursor:pointer;}
+.proj-card{background:linear-gradient(135deg,rgba(7,18,50,.9),rgba(5,15,39,.95));border:1px solid rgba(79,142,247,.13);transition:all .4s cubic-bezier(.16,1,.3,1);}
+.proj-card:hover{border-color:rgba(79,142,247,.45);transform:translateY(-8px);box-shadow:0 24px 60px rgba(79,142,247,.13),0 0 0 1px rgba(79,142,247,.1);}
+.proj-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,142,247,.06),transparent);opacity:0;transition:opacity .4s;border-radius:inherit;}
+.proj-card:hover::before{opacity:1;}
+.tech-badge{background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.18);transition:all .25s;}
+.tech-badge:hover{background:rgba(79,142,247,.18);border-color:rgba(79,142,247,.5);transform:translateY(-2px);box-shadow:0 4px 20px rgba(79,142,247,.22);}
+.contact-card{background:rgba(5,15,39,.8);border:1px solid rgba(79,142,247,.13);transition:all .3s;}
+.contact-card:hover{border-color:rgba(79,142,247,.42);transform:translateY(-4px);box-shadow:0 12px 40px rgba(79,142,247,.14);}
+@keyframes marqueeAnim{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-inner{animation:marqueeAnim 25s linear infinite;display:flex;width:max-content;}
+.stat-card{background:linear-gradient(135deg,rgba(79,142,247,.07),rgba(7,18,50,.85));border:1px solid rgba(79,142,247,.16);}
+.timeline-dot{width:12px;height:12px;border-radius:50%;background:#4f8ef7;box-shadow:0 0 12px #4f8ef7,0 0 24px rgba(79,142,247,.45);}
+.btn-teal{background:linear-gradient(135deg,#2563eb,#4f8ef7);color:#fff;font-weight:700;transition:all .3s;position:relative;overflow:hidden;}
+.btn-teal::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent);opacity:0;transition:opacity .3s;}
+.btn-teal:hover::before{opacity:1;}
+.btn-teal:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(37,99,235,.5);}
+.btn-outline-teal{border:1.5px solid rgba(79,142,247,.5);color:#4f8ef7;transition:all .3s;}
+.btn-outline-teal:hover{background:rgba(79,142,247,.1);border-color:#4f8ef7;transform:translateY(-2px);}
+.sec-label{color:#4f8ef7;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;display:flex;align-items:center;gap:.75rem;}
+.sec-label::before{content:'';width:32px;height:1.5px;background:linear-gradient(90deg,#4f8ef7,transparent);}
+.sec-label::after{content:'';flex:0 0 32px;height:1.5px;background:linear-gradient(270deg,#4f8ef7,transparent);}
+.float-tag{animation:floatY 4s ease-in-out infinite;}
+.float-tag:nth-child(2){animation-delay:-1.3s;}
+.float-tag:nth-child(3){animation-delay:-2.6s;}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.nav-link-active{color:#4f8ef7 !important;}
+.progress-ring circle{transition:stroke-dashoffset 1.5s cubic-bezier(.16,1,.3,1);}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* ── EXTRA ANIMATIONS ── */
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+.shimmer-text{background:linear-gradient(90deg,#4f8ef7,#818cf8,#2563eb,#4f8ef7);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite;}
+
+/* Pulse border on cards */
+@keyframes borderPulse{0%,100%{box-shadow:0 0 0 0 rgba(79,142,247,.0)}50%{box-shadow:0 0 0 4px rgba(79,142,247,.08)}}
+.stat-card{animation:borderPulse 3.5s ease-in-out infinite;}
+
+/* Floating orbs gentle drift */
+@keyframes orbDrift1{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-30px) translateX(20px)}66%{transform:translateY(20px) translateX(-15px)}}
+@keyframes orbDrift2{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(25px) translateX(-20px)}66%{transform:translateY(-20px) translateX(15px)}}
+.orb1{animation:orbDrift1 18s ease-in-out infinite;}
+.orb2{animation:orbDrift2 22s ease-in-out infinite;}
+
+/* Gradient border glow on hover cards */
+.about-minicard{position:relative;}
+.about-minicard::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(79,142,247,.25),rgba(124,58,237,.15),transparent);opacity:0;transition:opacity .4s;pointer-events:none;}
+.about-minicard:hover::after{opacity:1;}
+
+/* Section entrance — slide + fade with stagger support */
+.section-fade-up{opacity:0;transform:translateY(50px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.section-fade-up.visible{opacity:1;transform:translateY(0);}
+
+/* Glow pulse on timeline dot */
+@keyframes dotPulse{0%,100%{box-shadow:0 0 12px #4f8ef7,0 0 24px rgba(79,142,247,.45)}50%{box-shadow:0 0 20px #4f8ef7,0 0 40px rgba(79,142,247,.7),0 0 60px rgba(79,142,247,.2)}}
+.timeline-dot{animation:dotPulse 2.5s ease-in-out infinite;}
+
+
+/* Tech badge shimmer sweep */
+.tech-badge{overflow:hidden;position:relative;}
+.tech-badge::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);transition:left .5s;}
+.tech-badge:hover::after{left:140%;}
+
+/* Nav link underline slide */
+.nav-link{position:relative;}
+.nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:#4f8ef7;transition:width .3s ease;}
+.nav-link:hover::after,.nav-link-active::after{width:100%;}
+
+/* Gradient ring spin on KP avatar */
+@keyframes ringRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.kp-ring-outer{animation:ringRotate 12s linear infinite;}
+.kp-ring-inner{animation:ringRotate 8s linear infinite reverse;}
+
+/* Contact card reveal */
+@keyframes slideUpFade{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.contact-reveal{animation:slideUpFade .6s cubic-bezier(.16,1,.3,1) both;}
+
+/* Bounce in for stat numbers */
+@keyframes bounceIn{0%{opacity:0;transform:scale(.5)}70%{transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+.stat-num-anim{animation:bounceIn .7s cubic-bezier(.34,1.56,.64,1) both;}
+
+.card-anim{transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s;}
+.card-anim:hover{transform:translateY(-5px) scale(1.02);}
+.tech-badge-faded{opacity:.35;filter:grayscale(.6);transition:all .3s;}
+.tech-badge-faded:hover{opacity:.7;filter:grayscale(.2);transform:translateY(-2px);}
+
+/* ── MAGNETIC BUTTON ────────────────────────── */
+.mag-btn{transition:box-shadow .25s;}
+
+/* ── HERO NAME UNDERLINE GLOW ────────────────── */
+.name-underline{
+  display:block;height:3px;width:0;margin-top:.35rem;
+  background:linear-gradient(90deg,#2563eb,#4f8ef7,#818cf8,transparent);
+  border-radius:2px;
+  transition:width 1s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 0 12px rgba(79,142,247,.6);
+}
+.name-underline.show{width:100%;}
+
+/* ── SHIMMER TEXT (already exists, ensure it renders) ── */
+.shimmer-text{
+  background:linear-gradient(90deg,#4f8ef7,#818cf8,#60a5fa,#4f8ef7);
+  background-size:200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shimmer 4s linear infinite;
+}
+
+/* ── FLOATING BADGE INDIVIDUAL ANIMATIONS ────── */
+.fbadge-0{animation:floatY 4.2s ease-in-out infinite;}
+.fbadge-1{animation:floatY 5.1s ease-in-out infinite;animation-delay:-1.7s;}
+.fbadge-2{animation:floatY 3.8s ease-in-out infinite;animation-delay:-3s;}
+.fbadge-3{animation:floatY 5.6s ease-in-out infinite;animation-delay:-.9s;}
+
+/* ── STAT CARD HOVER LIFT ────────────────────── */
+.stat-card{
+  transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,border-color .3s;
+  cursor:default;
+}
+.stat-card:hover{
+  transform:translateY(-6px) scale(1.04);
+  box-shadow:0 16px 40px rgba(79,142,247,.22);
+  border-color:rgba(79,142,247,.45);
+}
+
+/* ── HERO SCROLL CUE PULSE ───────────────────── */
+@keyframes scrollCue{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(6px);opacity:1}}
+.scroll-cue-line{animation:scrollCue 2s ease-in-out infinite;}
+
+/* ── AVAILABLE DOT RIPPLE ────────────────────── */
+@keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.8);opacity:0}}
+.avail-ripple{
+  position:absolute;inset:0;border-radius:50%;
+  background:#4f8ef7;animation:ripple 2s ease-out infinite;
+}
+
+@media(hover:none){#cursor,#cursor-ring{display:none;}body{cursor:auto;}}
+@media(max-width:480px){
+  #cursor,#cursor-ring{display:none !important;}body{cursor:auto;}
+  .orb1{width:220px;height:220px;top:-60px;left:-60px;}.orb2{width:180px;height:180px;}
+  section{padding-top:3rem !important;padding-bottom:3rem !important;}
+  #hero-title h1{font-size:1.85rem !important;line-height:1.08 !important;}
+  #hero-ctas{gap:.5rem !important;}#hero-ctas a{padding:.6rem 1rem !important;font-size:.65rem !important;}
+  .skills-grid{grid-template-columns:repeat(3,1fr) !important;}
+  .proj-carousel-item{min-width:calc(100vw - 2.5rem) !important;max-width:calc(100vw - 2.5rem) !important;}
+  .ai-band-grid{grid-template-columns:repeat(2,1fr) !important;}.edu-grid{grid-template-columns:1fr !important;}
+}
+@media(min-width:481px) and (max-width:768px){
+  #cursor,#cursor-ring{display:none !important;}body{cursor:auto;}
+  .orb1{width:280px;height:280px;top:-80px;left:-80px;}.orb2{width:240px;height:240px;}
+  section{padding-top:3.5rem !important;padding-bottom:3.5rem !important;}
+  #hero-title h1{font-size:2.2rem !important;line-height:1.05 !important;}
+  .proj-carousel-item{min-width:300px !important;max-width:300px !important;}
+  .ai-band-grid{grid-template-columns:repeat(2,1fr) !important;}
+}
+@media(min-width:769px) and (max-width:1024px){
+  section{padding-top:4rem !important;padding-bottom:4rem !important;}
+  #hero-title h1{font-size:2.8rem !important;}
+}
+@media(max-width:768px){.marquee-inner{animation-duration:38s;}.stat-card{padding:.65rem .4rem !important;}}
+
+/* ═══════════════════════════════════════════════
+   3D CARD TILT SYSTEM
+═══════════════════════════════════════════════ */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-shine {
+  position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;z-index:8;opacity:0;
+  transition:opacity .3s;
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.13) 0%, transparent 60%);
+}
+
+/* ═══════════════════════════════════════════════
+   FLOATING GEOMETRIC PARTICLES (replaces stars)
+═══════════════════════════════════════════════ */
+.geo-particle {
+  position:fixed;pointer-events:none;z-index:0;
+  animation:geoFloat var(--dur,8s) ease-in-out infinite;
+  animation-delay:var(--del,0s);
+  opacity:var(--op,.18);
+}
+@keyframes geoFloat {
+  0%   { transform:translateY(0)   translateX(0)    rotate(0deg);   }
+  25%  { transform:translateY(-28px) translateX(14px)  rotate(45deg);  }
+  50%  { transform:translateY(-18px) translateX(-10px) rotate(90deg);  }
+  75%  { transform:translateY(-32px) translateX(18px)  rotate(135deg); }
+  100% { transform:translateY(0)   translateX(0)    rotate(180deg); }
+}
+@keyframes geoFloatB {
+  0%   { transform:translateY(0)   translateX(0)   rotate(0deg);   opacity:var(--op,.12); }
+  33%  { transform:translateY(22px)  translateX(-16px) rotate(-60deg); opacity:calc(var(--op)*1.6); }
+  66%  { transform:translateY(-14px) translateX(20px)  rotate(-120deg);opacity:var(--op,.12); }
+  100% { transform:translateY(0)   translateX(0)   rotate(-180deg);opacity:var(--op,.12); }
+}
+@keyframes geoFloatC {
+  0%,100%{ transform:translateY(0) scale(1)   rotate(0deg);  opacity:var(--op); }
+  50%    { transform:translateY(-20px) scale(1.15) rotate(72deg); opacity:calc(var(--op)*2); }
+}
+
+/* ═══════════════════════════════════════════════
+   ANIMATED GRADIENT MESH BACKGROUND LAYER
+═══════════════════════════════════════════════ */
+#mesh-bg {
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(37,99,235,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(124,58,237,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 60% 10%, rgba(79,142,247,.05) 0%, transparent 70%);
+  animation:meshShift 18s ease-in-out infinite alternate;
+}
+@keyframes meshShift {
+  0%   { background-position:0% 0%,   100% 100%, 60% 10%; }
+  50%  { background-position:30% 20%, 70%  80%,  80% 30%; }
+  100% { background-position:10% 40%, 90%  60%,  40% 60%; }
+}
+
+/* ═══════════════════════════════════════════════
+   ABOUT MINICARD 3D
+═══════════════════════════════════════════════ */
+.about-minicard {
+  transform-style:preserve-3d;
+  will-change:transform;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ═══════════════════════════════════════════════
+   SKILL TECH BADGE 3D
+═══════════════════════════════════════════════ */
+.tech-reveal {
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+
+/* ═══════════════════════════════════════════════
+   EXPERIENCE PANEL 3D
+═══════════════════════════════════════════════ */
+.exp-panel-3d {
+  transform-style:preserve-3d;
+  will-change:transform;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ═══════════════════════════════════════════════
+   PROJECT CARD 3D
+═══════════════════════════════════════════════ */
+.proj-carousel-item {
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+
+/* ═══════════════════════════════════════════════
+   EDUCATION CARD 3D
+═══════════════════════════════════════════════ */
+.edu-tilt {
+  transform-style:preserve-3d;
+  will-change:transform;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ═══════════════════════════════════════════════
+   CONTACT CARD 3D
+═══════════════════════════════════════════════ */
+.contact-card {
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="scroll-progress" style="position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,#2563eb,#4f8ef7,#f59e0b);z-index:9997;transition:none;"></div>
+<div id="mesh-bg"></div>
+<div id="geo-particles"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="grid-bg"></div>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ══════════════════ TECH ICONS MAP ══════════════════ */
+const TECH_ICONS = {
+  'React':      { icon: 'fab fa-react',        color: '#61dafb' },
+  'JavaScript': { icon: 'fab fa-js-square',     color: '#f7df1e' },
+  'HTML5':      { icon: 'fab fa-html5',         color: '#e34f26' },
+  'CSS3':       { icon: 'fab fa-css3-alt',      color: '#1572b6' },
+  'Bootstrap':  { icon: 'fab fa-bootstrap',     color: '#7952b3' },
+  'Git':        { icon: 'fab fa-git-alt',       color: '#f05032' },
+  'GitHub':     { icon: 'fab fa-github',        color: '#e2e8f0' },
+  'Node.js':    { icon: 'fab fa-node-js',       color: '#339933' },
+  'npm':        { icon: 'fab fa-npm',           color: '#cb3837' },
+  'SharePoint': { icon: 'fab fa-microsoft',     color: '#0078d4' },
+  'TypeScript': { icon: 'fas fa-code',          color: '#3178c6' },
+  'SPFx':       { icon: 'fab fa-microsoft',     color: '#0078d4' },
+  'PnPjs':      { icon: 'fas fa-puzzle-piece',  color: '#0078d4' },
+  'REST API':   { icon: 'fas fa-plug',          color: '#4f8ef7' },
+  'Ant Design': { icon: 'fas fa-palette',       color: '#1890ff' },
+  'Tailwind':   { icon: 'fas fa-wind',          color: '#38bdf8' },
+  'GSAP':       { icon: 'fas fa-bolt',          color: '#88ce02' },
+  'Responsive': { icon: 'fas fa-mobile-alt',    color: '#4f8ef7' },
+  'WordPress':  { icon: 'fab fa-wordpress',     color: '#21759b' },
+  'Wix':        { icon: 'fas fa-globe',         color: '#FAAD00' },
+  'Claude':     { icon: 'fas fa-robot',         color: '#D97706' },
+  'ChatGPT':    { icon: 'fas fa-brain',         color: '#10a37f' },
+  'Lovable':    { icon: 'fas fa-heart',         color: '#ff6b8a' },
+  'Gemini':     { icon: 'fas fa-gem',           color: '#4285f4' },
+  'default':    { icon: 'fas fa-code',          color: '#4f8ef7' },
+};
+const TIcon = ({ name, size = 'text-sm', showLabel = true }) => {
+  const t = TECH_ICONS[name] || TECH_ICONS.default;
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <i className={`${t.icon} ${size}`} style={{ color: t.color }}></i>
+      {showLabel && <span>{name}</span>}
+    </span>
+  );
+};
+
+/* ══════════════════ CURSOR ══════════════════ */
+function Cursor() {
+  const dot = useRef(null), ring = useRef(null);
+  const pos = useRef({ x:0, y:0 }), rp = useRef({ x:0, y:0 });
+  useEffect(() => {
+    const mv = e => {
+      pos.current = { x: e.clientX, y: e.clientY };
+      if (dot.current) { dot.current.style.left=e.clientX+'px'; dot.current.style.top=e.clientY+'px'; }
+    };
+    let raf;
+    const loop = () => {
+      rp.current.x += (pos.current.x - rp.current.x) * .12;
+      rp.current.y += (pos.current.y - rp.current.y) * .12;
+      if (ring.current) { ring.current.style.left=rp.current.x+'px'; ring.current.style.top=rp.current.y+'px'; }
+      raf = requestAnimationFrame(loop);
+    };
+    window.addEventListener('mousemove', mv);
+    loop();
+    return () => { window.removeEventListener('mousemove', mv); cancelAnimationFrame(raf); };
+  }, []);
+  return null;
+}
+
+/* ══════════════════ TYPING EFFECT ══════════════════ */
+function TypeWriter({ words }) {
+  const [text, setText] = useState('');
+  const [wi, setWi] = useState(0);
+  const [ci, setCi] = useState(0);
+  const [del, setDel] = useState(false);
+  useEffect(() => {
+    const w = words[wi];
+    const speed = del ? 60 : 110;
+    const t = setTimeout(() => {
+      if (!del) {
+        setText(w.slice(0, ci+1));
+        if (ci+1 === w.length) setTimeout(() => setDel(true), 1600);
+        else setCi(c => c+1);
+      } else {
+        setText(w.slice(0, ci-1));
+        if (ci-1 === 0) { setDel(false); setWi(w2 => (w2+1) % words.length); setCi(0); }
+        else setCi(c => c-1);
+      }
+    }, speed);
+    return () => clearTimeout(t);
+  }, [text, wi, ci, del]);
+  return <span className="type-cursor text-teal font-semibold">{text}</span>;
+}
+
+/* ══════════════════ NAVBAR ══════════════════ */
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState('home');
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const h = () => {
+      setScrolled(window.scrollY > 50);
+      const secs = ['home','about','skills','experience','projects','education','contact'];
+      for (const id of [...secs].reverse()) {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 100) { setActive(id); break; }
+      }
+    };
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  const links = [['home','Home'],['about','About'],['skills','Skills'],['experience','Work'],['projects','Projects'],['education','Education'],['contact','Contact']];
+  return (
+    <nav className={`fixed top-0 left-0 right-0 z-50 font-poppins transition-all duration-300 ${scrolled ? 'nav-glass' : ''}`}>
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <a href="#home" className="flex items-center gap-2 group">
+          <div className="w-9 h-9 rounded-lg bg-tealDim border border-teal/30 flex items-center justify-center text-teal font-black text-lg group-hover:bg-teal group-hover:text-white transition-all duration-300">K</div>
+          <span className="text-bright font-bold text-lg tracking-tight hidden sm:block">Karthikeyan<span className="text-teal">.</span></span>
+        </a>
+        {/* Desktop Links */}
+        <ul className="hidden md:flex items-center gap-1">
+          {links.map(([id, label]) => (
+            <li key={id}>
+              <a href={`#${id}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all duration-250 ${active===id ? 'text-teal bg-tealDim' : 'text-muted hover:text-bright'}`}>
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        {/* CTA */}
+        <a href="#contact" className="hidden md:flex btn-teal px-5 py-2 rounded-lg text-xs font-bold tracking-wider uppercase items-center gap-2">
+          <i className="fas fa-paper-plane text-xs"></i> Hire Me
+        </a>
+        {/* Mobile menu */}
+        <button className="md:hidden text-teal text-xl p-2" onClick={() => setOpen(o => !o)}>
+          <i className={`fas ${open ? 'fa-times' : 'fa-bars'}`}></i>
+        </button>
+      </div>
+      {open && (
+        <div className="md:hidden nav-glass border-t border-teal/10 px-6 py-4 flex flex-col gap-2">
+          {links.map(([id, label]) => (
+            <a key={id} href={`#${id}`} onClick={() => setOpen(false)}
+              className={`py-2 px-3 rounded text-sm font-semibold tracking-wider uppercase ${active===id ? 'text-teal bg-tealDim' : 'text-muted'}`}>{label}</a>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+}
+
+/* ══════════════════ HERO ══════════════════ */
+function Hero() {
+  const ref = useRef(null);
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── GSAP Timeline — staggered entrance ──
+    const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+
+    // Eyebrow badge
+    tl.fromTo('#h-eyebrow', { opacity:0, y:18, scale:.9 }, { opacity:1, y:0, scale:1, duration:.6 }, 0.15)
+
+    // "Hi, I'm" line
+    .fromTo('#h-line1', { opacity:0, x:-40 }, { opacity:1, x:0, duration:.65 }, 0.3)
+
+    // Name — each word drops in separately
+    .fromTo('#h-name1', { opacity:0, y:55, rotateX:-20 }, { opacity:1, y:0, rotateX:0, duration:.75, ease:'back.out(1.4)', transformPerspective:500 }, 0.42)
+    .fromTo('#h-name2', { opacity:0, y:55, rotateX:-20 }, { opacity:1, y:0, rotateX:0, duration:.75, ease:'back.out(1.4)', transformPerspective:500 }, 0.54)
+
+    // Typewriter + description
+    .fromTo('#hero-sub', { opacity:0, y:32 }, { opacity:1, y:0, duration:.8 }, 0.72)
+
+    // CTA buttons cascade
+    .fromTo('#h-btn1', { opacity:0, y:20, scale:.9 }, { opacity:1, y:0, scale:1, duration:.55, ease:'back.out(1.6)' }, 0.88)
+    .fromTo('#h-btn2', { opacity:0, y:20, scale:.9 }, { opacity:1, y:0, scale:1, duration:.55, ease:'back.out(1.6)' }, 0.97)
+    .fromTo('#h-btn3', { opacity:0, y:20, scale:.9 }, { opacity:1, y:0, scale:1, duration:.55, ease:'back.out(1.6)' }, 1.05)
+
+    // Stats row
+    .fromTo('#hero-stats .stat-card',
+      { opacity:0, y:28, scale:.88 },
+      { opacity:1, y:0, scale:1, stagger:.1, duration:.6, ease:'back.out(1.5)' }, 1.1)
+
+    // Right panel
+    .fromTo('#hero-tags', { opacity:0, x:65, rotateY:-12 }, { opacity:1, x:0, rotateY:0, duration:1.0, transformPerspective:700 }, 0.35);
+
+    // ── Parallax orbs on scroll ──
+    gsap.to('.orb1', { y:-120, ease:'none', scrollTrigger:{ trigger:'body', start:'top top', end:'bottom bottom', scrub:1.5 } });
+    gsap.to('.orb2', { y:100,  ease:'none', scrollTrigger:{ trigger:'body', start:'top top', end:'bottom bottom', scrub:2 } });
+
+    // ── Scroll progress bar ──
+    gsap.to('#scroll-progress', { width:'100%', ease:'none', scrollTrigger:{ trigger:'body', start:'top top', end:'bottom bottom', scrub:0.3 } });
+
+    // ── Trigger underline after name animation ──
+    setTimeout(() => {
+      const ul = document.getElementById('name-underline');
+      if (ul) ul.classList.add('show');
+    }, 900);
+
+    // ── Magnetic buttons ──
+    document.querySelectorAll('.mag-btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r = btn.getBoundingClientRect();
+        gsap.to(btn, { x:(e.clientX-r.left-r.width/2)*.22, y:(e.clientY-r.top-r.height/2)*.22, duration:.35, ease:'power2.out' });
+      });
+      btn.addEventListener('mouseleave', () => gsap.to(btn, { x:0, y:0, duration:.6, ease:'elastic.out(1,.4)' }));
+    });
+
+  }, []);
+
+  const stats = [['React','Specialist'],['UI/UX','Focused'],['MERN','Certified']];
+  return (
+    <section id="home" className="relative min-h-screen flex items-center z-10 pt-16">
+      <div className="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
+        {/* LEFT */}
+        <div className="order-2 lg:order-1">
+          {/* Eyebrow */}
+          <div id="h-eyebrow" className="flex items-center gap-3 mb-5" style={{opacity:0}}>
+            <div style={{position:'relative',width:'8px',height:'8px',flexShrink:0}}>
+              <div className="avail-ripple"></div>
+              <div style={{position:'relative',zIndex:1,width:'8px',height:'8px',borderRadius:'50%',background:'#4f8ef7',boxShadow:'0 0 8px #4f8ef7'}}></div>
+            </div>
+            <span className="text-dim text-xs font-semibold tracking-[.22em] uppercase">Available for opportunities</span>
+          </div>
+
+          {/* NAME BLOCK — always visible structure, animated by GSAP */}
+          <div className="mb-5">
+            {/* "Hi, I'm" */}
+            <div id="h-line1" style={{opacity:0}}>
+              <span className="text-dim font-light text-lg lg:text-xl tracking-wide block mb-1">Hi, I'm</span>
+            </div>
+            {/* First name */}
+            <div id="h-name1" style={{opacity:0,display:'block'}}>
+              <span className="shimmer-text font-black block"
+                style={{fontSize:'clamp(2.6rem,7vw,5rem)',lineHeight:.95,letterSpacing:'-.03em'}}>
+                Karthikeyan
+              </span>
+              <span className="name-underline" id="name-underline"></span>
+            </div>
+            {/* Last name */}
+            <div id="h-name2" style={{opacity:0,display:'block'}}>
+              <span className="text-bright italic font-light block"
+                style={{fontSize:'clamp(2rem,5vw,3.8rem)',lineHeight:1,letterSpacing:'-.02em'}}>
+                Paramasivam
+              </span>
+            </div>
+          </div>
+          <div id="hero-sub" className="mb-8" style={{opacity:0}}>
+            <div className="text-lg text-bright font-medium mb-3">
+              I build <TypeWriter words={['React Applications.','Interactive UIs.','Web Experiences.']} />
+            </div>
+            <p className="text-dim font-light leading-relaxed max-w-lg text-sm">
+              Frontend Developer crafting high-performance web interfaces. Specialized in <span className="text-teal font-medium">React</span> — obsessed with pixel-perfect detail and seamless UX.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-4 mb-10">
+            <a id="h-btn1" href="#projects" className="btn-teal mag-btn px-7 py-3 rounded-xl text-xs font-bold tracking-wider uppercase flex items-center gap-2" style={{opacity:0}}>
+              <i className="fas fa-layer-group"></i> View Projects
+            </a>
+            <a id="h-btn2" href="#contact" className="btn-outline-teal mag-btn px-7 py-3 rounded-xl text-sm font-bold tracking-wider uppercase flex items-center gap-2" style={{opacity:0}}>
+              <i className="fas fa-envelope"></i> Contact Me
+            </a>
+            <a id="h-btn3" href="#" className="btn-outline-teal px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 border-white/20 text-dim hover:text-bright hover:border-white/40" style={{opacity:0}}>
+              <i className="fas fa-download"></i> Resume
+            </a>
+          </div>
+          <div id="hero-stats" className="grid grid-cols-3 gap-4" style={{opacity:0}}>
+            {stats.map(([n,l]) => (
+              <div key={l} className="stat-card rounded-xl p-4 text-center">
+                <div className="text-teal font-black text-xl leading-none mb-1">{n}</div>
+                <div className="text-muted text-xs font-medium leading-tight">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* RIGHT */}
+        <div id="hero-tags" className="order-1 lg:order-2 relative flex flex-col items-center gap-6" style={{opacity:0}}>
+          {/* Abstract background canvas */}
+          <div className="relative w-44 h-44 lg:w-72 lg:h-72">
+            {/* Rotating abstract rings */}
+            <div className="absolute inset-0 rounded-full" style={{
+              background:'radial-gradient(ellipse at 30% 30%, rgba(79,142,247,0.14) 0%, rgba(79,142,247,0.06) 50%, transparent 70%)',
+              animation:'spin 25s linear infinite'
+            }}></div>
+            {/* Dashed orbit rings */}
+            <div className="absolute" style={{inset:'-18px',borderRadius:'50%',border:'1px dashed rgba(79,142,247,0.14)',animation:'spin 18s linear infinite'}}></div>
+            <div className="absolute" style={{inset:'-36px',borderRadius:'50%',border:'1px dashed rgba(79,142,247,0.08)',animation:'spin 30s linear infinite reverse'}}></div>
+            {/* Floating abstract particles */}
+            {[
+              {size:'6px',top:'8%',left:'12%',color:'rgba(79,142,247,0.7)',delay:'0s',dur:'3.2s'},
+              {size:'4px',top:'20%',right:'8%',color:'rgba(124,58,237,0.6)',delay:'0.8s',dur:'4s'},
+              {size:'8px',bottom:'15%',left:'6%',color:'rgba(124,58,237,0.6)',delay:'1.5s',dur:'3.6s'},
+              {size:'5px',bottom:'25%',right:'12%',color:'rgba(129,140,248,0.6)',delay:'2s',dur:'2.8s'},
+              {size:'3px',top:'45%',left:'-4%',color:'rgba(129,140,248,0.6)',delay:'0.4s',dur:'4.2s'},
+              {size:'4px',top:'10%',right:'22%',color:'rgba(79,142,247,0.45)',delay:'1.2s',dur:'3.8s'},
+            ].map((p,i)=>(
+              <div key={i} className="absolute rounded-full" style={{
+                width:p.size,height:p.size,
+                top:p.top,left:p.left,right:p.right,bottom:p.bottom,
+                background:p.color,
+                boxShadow:`0 0 8px ${p.color}`,
+                animation:`floatY ${p.dur} ease-in-out infinite`,
+                animationDelay:p.delay
+              }}></div>
+            ))}
+            {/* Glowing diagonal lines */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 288 288" fill="none" style={{opacity:0.15}}>
+              <line x1="0" y1="100" x2="288" y2="188" stroke="#4f8ef7" strokeWidth="0.5"/>
+              <line x1="80" y1="0" x2="208" y2="288" stroke="#818cf8" strokeWidth="0.5"/>
+              <line x1="0" y1="200" x2="288" y2="80" stroke="#7c3aed" strokeWidth="0.5"/>
+              <circle cx="144" cy="144" r="100" stroke="#4f8ef7" strokeWidth="0.5" strokeDasharray="8 4"/>
+              <circle cx="144" cy="144" r="128" stroke="#818cf8" strokeWidth="0.4" strokeDasharray="4 8"/>
+            </svg>
+            {/* Main KP circle */}
+            <div className="absolute inset-0 rounded-full flex items-center justify-center" style={{
+              background:'linear-gradient(135deg, rgba(79,142,247,0.12) 0%, rgba(79,142,247,0.08) 60%, rgba(5,15,39,0.90) 100%)',
+              border:'1.5px solid rgba(79,142,247,0.25)',
+              boxShadow:'0 0 40px rgba(79,142,247,0.14), inset 0 0 40px rgba(79,142,247,0.06)'
+            }}>
+              <div className="text-center z-10 relative">
+                <div className="font-black hero-gradient leading-none" style={{fontSize:'clamp(2.5rem,8vw,4rem)'}}>KP</div>
+                <div className="text-teal text-xs font-semibold tracking-widest mt-2 opacity-90">FRONTEND DEV</div>
+              </div>
+              {/* Inner slow spin */}
+              <div className="absolute inset-6 border border-teal/10 rounded-full" style={{animation:'spin 22s linear infinite'}}></div>
+            </div>
+            {/* Floating tech badges */}
+            {[
+              { t:'React',      pos:{top:'-10px',right:'-20px'}, cls:'fbadge-0' },
+              { t:'JavaScript', pos:{bottom:'10px',left:'-28px'}, cls:'fbadge-1' },
+              { t:'GitHub',     pos:{top:'52px',left:'-36px'},    cls:'fbadge-2' },
+              { t:'HTML5',      pos:{bottom:'-4px',right:'-8px'}, cls:'fbadge-3' },
+            ].map(({ t, pos, cls }) => (
+              <div key={t} className={`absolute tech-badge px-3 py-1.5 rounded-full text-xs font-semibold text-bright flex items-center gap-1.5 ${cls} z-20`}
+                style={{...pos}}>
+                <TIcon name={t} size="text-sm" showLabel={true} />
+              </div>
+            ))}
+          </div>
+          {/* Location + status strip */}
+          <div className="flex flex-wrap gap-3 justify-center">
+            <div className="tech-badge px-4 py-2 rounded-full text-xs font-medium text-dim flex items-center gap-2">
+              <i className="fas fa-map-marker-alt text-teal"></i> Coimbatore, Tamil Nadu
+            </div>
+            <div className="tech-badge px-4 py-2 rounded-full text-xs font-medium text-dim flex items-center gap-2">
+              <i className="fas fa-graduation-cap text-gold"></i> M.Sc Computer Science
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Scroll cue */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted text-xs">
+        <span className="tracking-widest uppercase">Scroll</span>
+        <div className="w-px h-10 bg-gradient-to-b from-teal to-transparent"></div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════ MARQUEE ══════════════════ */
+function Marquee() {
+  const items = ['React Developer','SPFx Specialist','Frontend Engineer','HTML5 · CSS3','JavaScript ES6+','UI/UX Focused','Open to Work','Coimbatore, India','MERN Certified'];
+  return (
+    <div className="relative z-10 border-y border-teal/10 bg-card/80 py-3 overflow-hidden">
+      <div className="marquee-inner">
+        {[...items,...items].map((it,i) => (
+          <span key={i} className="flex items-center gap-6 px-6 text-xs font-semibold tracking-widest uppercase text-muted whitespace-nowrap">
+            <span className="text-teal">◆</span>{it}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════ ABOUT ══════════════════ */
+function About() {
+  const ref = useRef(null);
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set('.about-text', { opacity:0, x:-70 });
+    gsap.set('.about-cards', { opacity:0, x:70 });
+    gsap.set('.about-label', { opacity:0, y:-20 });
+    ScrollTrigger.create({
+      trigger: ref.current, start:'top 78%', once:true,
+      onEnter: () => {
+        gsap.to('.about-label', { opacity:1, y:0, duration:.7, ease:'power3.out' });
+        gsap.to('.about-text', { opacity:1, x:0, duration:1, ease:'power3.out', delay:.1 });
+        gsap.to('.about-cards', { opacity:1, x:0, duration:1, ease:'power3.out', delay:.25 });
+        gsap.from('.about-minicard', {
+          opacity:0, y:40, rotateX:-25, scale:.88,
+          stagger:{ each:.13, from:'start' },
+          duration:.75, ease:'back.out(1.8)', delay:.35,
+          transformPerspective:800,
+        });
+        // 3D tilt on about minicards
+        setTimeout(() => {
+          document.querySelectorAll('.about-minicard').forEach(card => {
+            card.addEventListener('mousemove', e => {
+              const r = card.getBoundingClientRect();
+              const x = (e.clientX - r.left) / r.width  - .5;
+              const y = (e.clientY - r.top)  / r.height - .5;
+              gsap.to(card, { rotateY:x*20, rotateX:-y*20, scale:1.05,
+                transformPerspective:700, duration:.2, ease:'power2.out',
+                boxShadow:`${x*14}px ${-y*14}px 32px rgba(79,142,247,.25)` });
+              let shine = card.querySelector('.tilt-shine');
+              if (!shine) { shine=document.createElement('div'); shine.className='tilt-shine'; card.appendChild(shine); }
+              shine.style.background=`radial-gradient(circle at ${(x+.5)*100}% ${(y+.5)*100}%, rgba(255,255,255,.15) 0%, transparent 60%)`;
+              shine.style.opacity='1';
+            });
+            card.addEventListener('mouseleave', () => {
+              gsap.to(card, { rotateY:0, rotateX:0, scale:1, boxShadow:'none', duration:.6, ease:'elastic.out(1,.4)' });
+              const shine = card.querySelector('.tilt-shine');
+              if (shine) shine.style.opacity='0';
+            });
+          });
+        }, 600);
+      }
+    });
+  }, []);
+  return (
+    <section id="about" ref={ref} className="relative z-10 py-28">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="sec-label mb-4 about-label"><span>About</span></div>
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="about-text">
+            <h2 className="text-3xl lg:text-4xl font-black text-bright leading-tight mb-6">
+              Crafting Digital<br /><span className="hero-gradient">Experiences</span>
+            </h2>
+            <p className="text-dim leading-relaxed mb-5 font-light text-sm">
+              I'm a passionate <span className="text-teal font-medium">Frontend Developer</span> based in Coimbatore, Tamil Nadu — building modern, scalable web applications with clean code and stunning UIs.
+            </p>
+            <p className="text-dim leading-relaxed mb-5 font-light text-sm">
+              My core expertise is the <span className="text-teal font-medium">React ecosystem</span>. I've also worked with enterprise SharePoint SPFx development in a previous role. I specialize in creating interfaces that are both beautiful and blazing-fast.
+            </p>
+            <p className="text-dim leading-relaxed font-light text-sm">
+              Outside of code, I play <span className="text-teal font-medium">Chess</span> — which sharpens my ability to think several steps ahead, plan component architecture, and make precise decisions under constraint. I follow <span className="text-teal font-medium">Cricket</span> closely, a sport that mirrors frontend development perfectly: consistent execution, reading the situation, and adapting strategy in real time to deliver results.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 about-cards">
+            {[
+              { icon:'fas fa-code',       label:'Frontend Dev', sub:'React, HTML, CSS, JS',    c:'from-blue-500/12 to-transparent',        ic:'text-teal'     },
+              { icon:'fab fa-react',      label:'React Apps',   sub:'SPA, Hooks, Context API',  c:'from-blue-500/12 to-transparent',        ic:'text-cyan'        },
+              { icon:'fas fa-mobile-alt', label:'Responsive',   sub:'Mobile-first design',      c:'from-blue-500/12 to-transparent',        ic:'text-teal'     },
+              { icon:'fab fa-microsoft',  label:'SharePoint',   sub:'SPFx, PnPjs, REST',        c:'from-blue-500/12 to-transparent',        ic:'text-cyan'        },
+            ].map(({ icon, label, sub, c, ic }) => (
+              <div key={label} className={`about-minicard bg-gradient-to-br ${c} border border-white/8 rounded-2xl p-5 group card-anim flex flex-col h-full min-h-[110px]`}>
+                <i className={`${icon} text-2xl ${ic} mb-3 block group-hover:scale-110 transition-transform duration-300`}></i>
+                <div className="text-bright font-semibold text-sm mb-1">{label}</div>
+                <div className="text-muted text-xs font-light">{sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════ SKILLS ══════════════════ */
+function Skills() {
+  const ref = useRef(null);
+  const [triggered, setTriggered] = useState(false);
+  const skillBars = [
+    { name:'HTML5 / CSS3', pct:95, tech:'HTML5' },
+    { name:'React.js', pct:90, tech:'React' },
+    { name:'JavaScript ES6+', pct:87, tech:'JavaScript' },
+    { name:'Bootstrap / Ant Design', pct:88, tech:'Bootstrap' },
+    { name:'SharePoint SPFx', pct:55, tech:'SPFx' },
+    { name:'PnPjs / REST API', pct:60, tech:'PnPjs' },
+  ];
+  const techStack = [
+    { name:'React' }, { name:'HTML5' }, { name:'CSS3' }, { name:'JavaScript' },
+    { name:'TypeScript' }, { name:'Bootstrap' }, { name:'Ant Design' }, { name:'REST API' },
+    { name:'Git' }, { name:'GitHub' }, { name:'Responsive' },
+    { name:'WordPress', faded:true }, { name:'Wix', faded:true },
+    { name:'SPFx', faded:true }, { name:'PnPjs', faded:true },
+  ];
+  const aiTools = [];
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+      trigger: ref.current, start:'top 75%', once: true,
+      onEnter: () => {
+        setTriggered(true);
+        // Skill bars slide in with skew
+        gsap.fromTo('.skill-reveal',
+          { opacity:0, x:-50, skewX:4 },
+          { opacity:1, x:0, skewX:0, stagger:.11, duration:.75, ease:'power3.out' });
+        // Tech badges: 3D flip from below
+        gsap.fromTo('.tech-reveal',
+          { opacity:0, y:30, rotateX:-50, scale:.8 },
+          { opacity:1, y:0, rotateX:0, scale:1,
+            stagger:{ each:.045, from:'start' },
+            duration:.55, ease:'back.out(1.8)',
+            transformPerspective:500 });
+        // Mouse tilt on tech badges
+        setTimeout(() => {
+          document.querySelectorAll('.tech-reveal').forEach(card => {
+            card.addEventListener('mousemove', e => {
+              const r = card.getBoundingClientRect();
+              const x = (e.clientX-r.left)/r.width -.5;
+              const y = (e.clientY-r.top) /r.height-.5;
+              gsap.to(card, { rotateY:x*24, rotateX:-y*24, scale:1.1,
+                transformPerspective:450, duration:.18, ease:'power2.out' });
+            });
+            card.addEventListener('mouseleave', () =>
+              gsap.to(card, { rotateY:0, rotateX:0, scale:1, duration:.5, ease:'elastic.out(1,.4)' }));
+          });
+        }, 700);
+      }
+    });
+  }, []);
+  return (
+    <section id="skills" ref={ref} className="relative z-10 py-28 bg-card/50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <div className="sec-label justify-center mb-4"><span>Skills</span></div>
+          <h2 className="text-3xl lg:text-4xl font-black text-bright mb-4">Technical <span className="hero-gradient">Arsenal</span></h2>
+          <p className="text-dim max-w-xl mx-auto font-light leading-relaxed text-sm">Technologies I've mastered through years of real-world production delivery.</p>
+        </div>
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Skill bars */}
+          <div className="space-y-6">
+            {skillBars.map((s, i) => (
+              <div key={s.name} className="skill-reveal">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2 text-bright text-sm font-semibold">
+                    <TIcon name={s.tech} size="text-base" showLabel={false} />
+                    {s.name}
+                  </div>
+                  <span className="text-teal text-xs font-mono font-semibold">{s.pct}%</span>
+                </div>
+                <div className="skill-bar-bg h-2 rounded-full">
+                  <div className="skill-bar-fill h-full rounded-full" style={{ width: triggered ? s.pct+'%' : '0%', transitionDelay: i*.12+'s' }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Tech grid */}
+          <div>
+            <div className="text-xs font-semibold text-muted tracking-widest uppercase mb-4">Full Stack of Technologies</div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 skills-grid">
+              {techStack.map((t, i) => (
+                <div key={t.name} title={t.faded ? 'Familiar — not actively used' : t.name}
+                  className={`tech-reveal rounded-xl p-3 flex flex-col items-center gap-2 text-center ${t.faded ? 'tech-badge-faded tech-badge' : 'tech-badge'}`}
+                  style={{transitionDelay:i*.04+'s'}}>
+                  <TIcon name={t.name} size="text-xl" showLabel={false} />
+                  <span className="text-dim text-xs font-medium">{t.name}</span>
+                  {t.faded && <span className="text-[9px] text-muted/60 leading-none">familiar</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── AI TOOLS BAND ── */}
+        <div className="mt-16">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-3" style={{background:'rgba(79,142,247,0.08)',border:'1px solid rgba(79,142,247,0.16)'}}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5H2L8 14l-2.5 7.5L12 17l6.5 4.5L16 14l6-4.5h-7.5L12 2z" fill="#4f8ef7"/></svg>
+              <span className="text-teal text-xs font-bold tracking-widest uppercase">AI Tools in My Workflow</span>
+            </div>
+            <p className="text-dim text-xs font-light max-w-md mx-auto">I actively use these AI tools to accelerate development, debug faster, and build smarter frontends.</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 ai-band-grid">
+
+            {/* Claude */}
+            <div className="tech-reveal rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 cursor-default"
+              style={{background:'rgba(217,119,6,0.07)',border:'1px solid rgba(217,119,6,0.2)'}}>
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background:'rgba(217,119,6,0.12)'}}>
+                  <svg width="22" height="22" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M31.7 7.3c-1.3-4.5-7.1-4.5-8.4 0L21 13.6l-6.6-1.8c-4.4-1.2-7.3 3.8-4.6 7.3l4.1 5.3-4.1 5.3c-2.7 3.5.2 8.5 4.6 7.3L21 35.2l2.3 6.3c1.3 4.5 7.1 4.5 8.4 0l2.3-6.3 6.6 1.8c4.4 1.2 7.3-3.8 4.6-7.3L41.1 24.5l4.1-5.3c2.7-3.5-.2-8.5-4.6-7.3L34 13.7 31.7 7.3z" fill="#D97706"/>
+                  </svg>
+                </div>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{background:'#D97706',boxShadow:'0 0 6px #D97706'}}></div>
+              </div>
+              <div>
+                <div className="text-bright font-bold text-sm mb-0.5">Claude</div>
+                <div className="text-muted text-xs font-light leading-relaxed">Code review & architecture</div>
+              </div>
+            </div>
+
+            {/* ChatGPT */}
+            <div className="tech-reveal rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 cursor-default"
+              style={{background:'rgba(16,163,127,0.07)',border:'1px solid rgba(16,163,127,0.2)'}}>
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background:'rgba(16,163,127,0.12)'}}>
+                  <svg width="22" height="22" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835 9.964 9.964 0 0 0-6.211-3.814 10.08 10.08 0 0 0-11.09 4.924 9.967 9.967 0 0 0-6.73 4.877 10.079 10.079 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 6.211 3.814 10.079 10.079 0 0 0 11.09-4.924 9.965 9.965 0 0 0 6.73-4.877 10.079 10.079 0 0 0-1.24-11.818zm-15.113 21.209a7.473 7.473 0 0 1-4.8-1.98l.238-.135 7.964-4.6a1.326 1.326 0 0 0 .67-1.154v-11.23l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.504 7.764zm-16.154-6.904a7.471 7.471 0 0 1-.894-5.023l.237.142 7.964 4.6a1.324 1.324 0 0 0 1.34 0l9.727-5.614v3.888a.12.12 0 0 1-.048.103l-8.051 4.649a7.504 7.504 0 0 1-10.275-2.745zm-2.109-17.443a7.47 7.47 0 0 1 3.908-3.285v9.456a1.324 1.324 0 0 0 .67 1.154l9.727 5.614-3.367 1.944a.12.12 0 0 1-.114.012L8.027 23.014a7.504 7.504 0 0 1-3.871-9.282zm27.945 6.44-9.727-5.615 3.367-1.943a.121.121 0 0 1 .114-.012l8.048 4.648a7.498 7.498 0 0 1-1.158 13.528v-9.476a1.325 1.325 0 0 0-.644-1.13zm3.35-5.043-.236-.144-7.965-4.6a1.324 1.324 0 0 0-1.34 0l-9.726 5.614v-3.888a.12.12 0 0 1 .047-.103l8.052-4.648a7.498 7.498 0 0 1 11.168 7.769zm-21.063 6.929-3.367-1.944a.12.12 0 0 1-.065-.092v-9.299a7.497 7.497 0 0 1 12.293-5.756l-.238.134-7.964 4.6a1.326 1.326 0 0 0-.67 1.154l-.013 11.203zm1.829-3.943 4.33-2.501 4.332 2.5v4.999l-4.331 2.5-4.331-2.5V18.115z" fill="#10a37f"/>
+                  </svg>
+                </div>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{background:'#10a37f',boxShadow:'0 0 6px #10a37f'}}></div>
+              </div>
+              <div>
+                <div className="text-bright font-bold text-sm mb-0.5">ChatGPT</div>
+                <div className="text-muted text-xs font-light leading-relaxed">Problem solving & debugging</div>
+              </div>
+            </div>
+
+            {/* Lovable */}
+            <div className="tech-reveal rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 cursor-default"
+              style={{background:'rgba(255,107,138,0.07)',border:'1px solid rgba(255,107,138,0.2)'}}>
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background:'rgba(255,107,138,0.12)'}}>
+                  <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 85C50 85 15 62 15 38C15 27.5 23.5 19 34 19C40.5 19 46.5 22.5 50 28C53.5 22.5 59.5 19 66 19C76.5 19 85 27.5 85 38C85 62 50 85 50 85Z" fill="#ff6b8a"/>
+                    <path d="M50 75C50 75 22 56 22 38C22 31 27.5 25.5 34 25.5C39 25.5 43.5 28.5 46.5 33.5L50 39.5L53.5 33.5C56.5 28.5 61 25.5 66 25.5C72.5 25.5 78 31 78 38C78 56 50 75 50 75Z" fill="#fff" fillOpacity="0.25"/>
+                  </svg>
+                </div>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{background:'#ff6b8a',boxShadow:'0 0 6px #ff6b8a'}}></div>
+              </div>
+              <div>
+                <div className="text-bright font-bold text-sm mb-0.5">Lovable</div>
+                <div className="text-muted text-xs font-light leading-relaxed">UI component generation</div>
+              </div>
+            </div>
+
+            {/* Gemini */}
+            <div className="tech-reveal rounded-2xl p-5 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 cursor-default"
+              style={{background:'rgba(66,133,244,0.07)',border:'1px solid rgba(66,133,244,0.2)'}}>
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background:'rgba(66,133,244,0.12)'}}>
+                  <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 28C14 26.0633 13.6267 24.2433 12.88 22.54C12.1567 20.8367 11.165 19.355 9.905 18.095C8.645 16.835 7.16333 15.8433 5.46 15.12C3.75667 14.3733 1.93667 14 0 14C1.93667 14 3.75667 13.6383 5.46 12.915C7.16333 12.1683 8.645 11.165 9.905 9.905C11.165 8.645 12.1567 7.16333 12.88 5.46C13.6267 3.75667 14 1.93667 14 0C14 1.93667 14.3617 3.75667 15.085 5.46C15.8317 7.16333 16.835 8.645 18.095 9.905C19.355 11.165 20.8367 12.1683 22.54 12.915C24.2433 13.6383 26.0633 14 28 14C26.0633 14 24.2433 14.3733 22.54 15.12C20.8367 15.8433 19.355 16.835 18.095 18.095C16.835 19.355 15.8317 20.8367 15.085 22.54C14.3617 24.2433 14 26.0633 14 28Z" fill="url(#gemini_grad)"/>
+                    <defs>
+                      <linearGradient id="gemini_grad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#4285f4"/>
+                        <stop offset="50%" stopColor="#9b72cb"/>
+                        <stop offset="100%" stopColor="#d96570"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{background:'#4285f4',boxShadow:'0 0 6px #4285f4'}}></div>
+              </div>
+              <div>
+                <div className="text-bright font-bold text-sm mb-0.5">Gemini</div>
+                <div className="text-muted text-xs font-light leading-relaxed">Research & content writing</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════ EXPERIENCE ══════════════════ */
+const EXPS = [
+  {
+    id:0, co:'Stratify Technologies LLC', role:'Frontend Developer', period:'Nov 2024 – Present', loc:'Coimbatore, TN', curr:true,
+    color:'from-blue-500/15 to-transparent', dot:'bg-blue-400',
+    desc:'Building high-performance, enterprise-grade web UIs from the ground up — driving cross-browser compatibility, mobile-first design, and seamless user experiences.',
+    bullets:['Architected reusable React component library deployed across 5+ live client projects','Achieved 98%+ cross-browser compatibility across Chrome, Firefox, Safari, Edge','Led mobile-first design initiatives, improving mobile user engagement metrics','Collaborated with design & backend teams to deliver pixel-perfect API-integrated UIs'],
+    tags:['React','JavaScript','HTML5','CSS3','Git','Responsive'],
+  },
+  {
+    id:1, co:'Quadra Systems', role:'Junior Software Engineer', period:'Nov 2023 – May 2024', loc:'Coimbatore, TN', curr:false,
+    color:'from-indigo-500/12 to-transparent', dot:'bg-indigo-400',
+    desc:'Transformed a legacy SharePoint Document Management System into a modern SPFx application, delivering 10+ enterprise apps for global clients including Norton Motorcycles.',
+    bullets:['Migrated legacy DMS to SPFx framework, improving performance by ~60%','Built no-code dynamic approval flow engine for multi-stage document workflows','Delivered 10+ SPFx apps: leave mgmt, bulk upload, holiday calendar, folder hierarchy','Executed full SharePoint site migration for Norton Motorcycles with zero data loss'],
+    tags:['SPFx','SharePoint','PnPjs','TypeScript','React','REST API'],
+  },
+  {
+    id:2, co:'Apexon', role:'Specialist Payor Auditor', period:'Nov 2017 – Jan 2023', loc:'Coimbatore, TN', curr:false,
+    color:'from-violet-500/10 to-transparent', dot:'bg-violet-400',
+    desc:'Performed compliance audits across six healthcare payment domains for Healthfirst Insurance over 5+ years, leading team training and continuous process improvement.',
+    bullets:['Audited PEGA Medicaid, UWF Billing, CHP Invoice, CHP Disenrollment & PEGA EIM','Maintained 99%+ audit accuracy rate over 5 years of consistent delivery','Led 20+ refresher training sessions on updated Healthfirst guidelines','Identified process inefficiencies and delivered reports to senior management'],
+    tags:['PEGA','Medicaid','Audit','Compliance','Training','Healthfirst'],
+  },
+];
+
+function Experience() {
+  const [active, setActive] = useState(0);
+  const ref = useRef(null);
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set('.exp-header-reveal', { opacity:0, y:40 });
+    ScrollTrigger.create({
+      trigger: ref.current, start:'top 80%', once:true,
+      onEnter: () => {
+        gsap.to('.exp-header-reveal', { opacity:1, y:0, duration:.9, ease:'power3.out' });
+        // Tabs stagger in
+        gsap.fromTo('.exp-tab',
+          { opacity:0, x:-40, rotateY:-18 },
+          { opacity:1, x:0, rotateY:0, stagger:.1, duration:.65, ease:'power3.out', delay:.2, transformPerspective:600 });
+        // Panel 3D entrance
+        gsap.fromTo('.exp-panel-3d',
+          { opacity:0, y:40, rotateX:14, scale:.95 },
+          { opacity:1, y:0, rotateX:0, scale:1, duration:.9, ease:'back.out(1.4)', delay:.35, transformPerspective:900 });
+        // Attach mouse tilt to panel
+        setTimeout(() => {
+          const panel = document.querySelector('.exp-panel-3d');
+          if (panel) {
+            panel.addEventListener('mousemove', e => {
+              const r = panel.getBoundingClientRect();
+              const x = (e.clientX-r.left)/r.width -.5;
+              const y = (e.clientY-r.top) /r.height-.5;
+              gsap.to(panel, { rotateX:-y*7, rotateY:x*7,
+                transformPerspective:900, duration:.25, ease:'power2.out',
+                boxShadow:`${x*18}px ${-y*18}px 48px rgba(79,142,247,.2)` });
+              let shine = panel.querySelector('.tilt-shine');
+              if (!shine) { shine=document.createElement('div'); shine.className='tilt-shine'; shine.style.position='absolute'; shine.style.inset='0'; shine.style.borderRadius='inherit'; shine.style.pointerEvents='none'; shine.style.zIndex='8'; shine.style.opacity='0'; shine.style.transition='opacity .3s'; panel.appendChild(shine); }
+              shine.style.background=`radial-gradient(circle at ${(x+.5)*100}% ${(y+.5)*100}%, rgba(79,142,247,.12) 0%, transparent 60%)`;
+              shine.style.opacity='1';
+            });
+            panel.addEventListener('mouseleave', () => {
+              gsap.to(panel, { rotateX:0, rotateY:0, boxShadow:'none', duration:.7, ease:'elastic.out(1,.45)' });
+              const shine = panel.querySelector('.tilt-shine');
+              if (shine) shine.style.opacity='0';
+            });
+          }
+        }, 600);
+      }
+    });
+  }, []);
+  const e = EXPS[active];
+  return (
+    <section id="experience" ref={ref} className="relative z-10 py-28">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 exp-header-reveal">
+          <div className="sec-label justify-center mb-4"><span>Experience</span></div>
+          <h2 className="text-4xl lg:text-5xl font-black text-bright mb-4">Work <span className="hero-gradient">Journey</span></h2>
+          <p className="text-dim max-w-xl mx-auto font-light">Building real-world web solutions across frontend development, enterprise tools, and healthcare operations.</p>
+        </div>
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8">
+          {/* Sidebar tabs - horizontal scroll on mobile */}
+          <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
+            {EXPS.map((ex) => (
+              <button key={ex.id} onClick={() => setActive(ex.id)}
+                className={`exp-tab flex-shrink-0 lg:w-full text-left px-5 py-4 rounded-r-xl lg:rounded-xl transition-all duration-300 ${active===ex.id ? 'active' : 'text-muted hover:text-dim'}`}>
+                <div className="font-semibold text-sm mb-0.5 whitespace-nowrap lg:whitespace-normal">{ex.co}</div>
+                <div className="text-xs opacity-60 hidden lg:block">{ex.period}</div>
+                {ex.curr && <span className="inline-block mt-1 text-[10px] bg-teal/10 text-teal border border-teal/30 px-2 py-0.5 rounded-full font-semibold">● Current</span>}
+              </button>
+            ))}
+          </div>
+          {/* Content panel */}
+          <div className={`exp-panel-3d lg:col-span-2 bg-gradient-to-br ${e.color} border border-white/8 rounded-2xl p-8`} key={e.id}>
+            <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className={`timeline-dot w-2.5 h-2.5 rounded-full ${e.dot}`}></div>
+                  <h3 className="text-bright text-xl font-bold">{e.role}</h3>
+                </div>
+                <div className="text-teal font-semibold text-sm">{e.co}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs font-mono text-muted mb-1">{e.period}</div>
+                <div className="text-xs text-muted flex items-center gap-1.5 justify-end"><i className="fas fa-map-marker-alt text-teal"></i>{e.loc}</div>
+              </div>
+            </div>
+            <p className="text-dim text-sm leading-relaxed font-light mb-5">{e.desc}</p>
+            <ul className="space-y-2.5 mb-6">
+              {e.bullets.map((b,i) => (
+                <li key={i} className="flex gap-3 text-dim text-sm">
+                  <i className="fas fa-caret-right text-teal mt-1 flex-shrink-0"></i>{b}
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-2">
+              {e.tags.map(t => (
+                <span key={t} className="tech-badge px-3 py-1 rounded-full text-xs font-semibold text-dim flex items-center gap-1.5">
+                  <TIcon name={t} size="text-xs" showLabel={true} />
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════ PROJECTS ══════════════════ */
+const PROJS = [
+  {
+    num:'01', title:'Studio 37 Photography',
+    stack:['React','CSS3','GitHub'],
+    type:'Landing Page',
+    desc:'Cinematic photography landing page with smooth gallery transitions and masonry grid layout.',
+    url:'https://karthik-paramasivam.github.io/Studio_37/#/',
+    accent:'#818cf8', accentDim:'rgba(129,140,248,0.12)', tag:'Landing Page'
+  },
+  {
+    num:'02', title:'Ant Design Form System',
+    stack:['React','Ant Design','JavaScript'],
+    type:'Web Application',
+    desc:'Enterprise web app with multi-step form, real-time validation and dynamic field rendering.',
+    url:'https://karthik-paramasivam.github.io/antDesignForm/',
+    accent:'#4f8ef7', accentDim:'rgba(79,142,247,0.10)', tag:'Web App'
+  },
+  {
+    num:'03', title:'Bootstrap UI Showcase',
+    stack:['Bootstrap','HTML5','CSS3'],
+    type:'Landing Page',
+    desc:'Fully responsive landing page showcasing Bootstrap 5 grid mastery and custom theming.',
+    url:'https://karthik-paramasivam.github.io/Bootstrap/',
+    accent:'#818cf8', accentDim:'rgba(79,142,247,0.10)', tag:'Landing Page'
+  },
+  {
+    num:'04', title:'React Todo Application',
+    stack:['React','JavaScript','HTML5'],
+    type:'Web Application',
+    desc:'Accessible web app for task management with micro-interactions and React Hooks state.',
+    url:'https://karthik-paramasivam.github.io/To-Do-App/',
+    accent:'#34d399', accentDim:'rgba(52,211,153,0.12)', tag:'Web App'
+  },
+  {
+    num:'05', title:'JavaScript Calculator',
+    stack:['JavaScript','HTML5','CSS3'],
+    type:'Web Application',
+    desc:'Full-featured calculator web app with expression parsing and keyboard bindings.',
+    url:'https://karthik-paramasivam.github.io/javascriptcalc/',
+    accent:'#f59e0b', accentDim:'rgba(124,58,237,0.12)', tag:'Utility'
+  },
+];
+
+function Projects() {
+  const [off, setOff] = useState(0);
+  const [active, setActive] = useState(0);
+  const cardW = 300;
+  const ref = useRef(null);
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set('.proj-title-reveal', { opacity:0, y:40 });
+    ScrollTrigger.create({
+      trigger: ref.current, start:'top 80%', once:true,
+      onEnter: () => {
+        gsap.to('.proj-title-reveal', { opacity:1, y:0, duration:.9, ease:'power3.out' });
+        // Cards cascade from below with 3D flip
+        gsap.fromTo('.proj-carousel-item',
+          { opacity:0, y:60, rotateX:22, scale:.88 },
+          { opacity:1, y:0, rotateX:0, scale:1,
+            stagger:{ each:.09, from:'start' },
+            duration:.85, ease:'back.out(1.5)', delay:.2,
+            transformPerspective:800 });
+        // Attach 3D tilt to each card
+        setTimeout(() => {
+          document.querySelectorAll('.proj-carousel-item').forEach(card => {
+            card.addEventListener('mousemove', e => {
+              const r = card.getBoundingClientRect();
+              const x = (e.clientX-r.left)/r.width -.5;
+              const y = (e.clientY-r.top) /r.height-.5;
+              gsap.to(card, { rotateX:-y*16, rotateY:x*16, scale:1.04,
+                transformPerspective:800, duration:.18, ease:'power2.out',
+                boxShadow:`${x*20}px ${-y*20}px 50px rgba(79,142,247,.22), 0 0 0 1px rgba(79,142,247,.18)` });
+              let shine = card.querySelector('.proj-shine');
+              if (!shine) { shine=document.createElement('div'); shine.className='proj-shine tilt-shine'; card.appendChild(shine); }
+              shine.style.background=`radial-gradient(circle at ${(x+.5)*100}% ${(y+.5)*100}%, rgba(255,255,255,.13) 0%, transparent 55%)`;
+              shine.style.opacity='1';
+            });
+            card.addEventListener('mouseleave', () => {
+              gsap.to(card, { rotateX:0, rotateY:0, scale:1, boxShadow:'none', duration:.65, ease:'elastic.out(1,.45)' });
+              const shine = card.querySelector('.proj-shine');
+              if (shine) shine.style.opacity='0';
+            });
+          });
+        }, 500);
+      }
+    });
+  }, []);
+  const shift = d => {
+    const n = Math.max(0, Math.min(active + d, PROJS.length - 1));
+    setActive(n); setOff(n * (cardW + 24));
+  };
+  return (
+    <section id="projects" ref={ref} className="relative z-10 py-28 bg-card/50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-wrap items-end justify-between gap-6 mb-16 proj-title-reveal">
+          <div>
+            <div className="sec-label mb-4"><span>Projects</span></div>
+            <h2 className="text-4xl lg:text-5xl font-black text-bright mb-3">Featured <span className="hero-gradient">Work</span></h2>
+            <p className="text-dim max-w-lg font-light leading-relaxed">Live, deployed projects demonstrating clean architecture and real-world problem-solving.</p>
+          </div>
+          <div className="flex gap-3">
+            <button onClick={() => shift(-1)} className="w-12 h-12 border border-teal/30 text-teal rounded-xl flex items-center justify-center hover:bg-teal/10 transition-all text-lg">←</button>
+            <button onClick={() => shift(1)} className="w-12 h-12 border border-teal/30 text-teal rounded-xl flex items-center justify-center hover:bg-teal/10 transition-all text-lg">→</button>
+          </div>
+        </div>
+        {/* Carousel */}
+        <div className="overflow-x-auto lg:overflow-hidden -mx-4 px-4 lg:mx-0 lg:px-0">
+          <div className="flex gap-6 transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] lg:flex-nowrap" style={{transform:`translateX(-${off}px)`}}>
+            {PROJS.map((p, i) => (
+              <a href={p.url} target="_blank" rel="noreferrer" key={i}
+                className="proj-carousel-item relative flex-shrink-0 rounded-2xl overflow-hidden group block"
+                style={{minWidth:'300px', maxWidth:'300px', background:'linear-gradient(145deg,rgba(7,18,50,.97),rgba(2,8,22,.99))', border:`1px solid ${p.accentDim.replace('0.12','0.2')}`}}>
+                {/* Left accent bar */}
+                <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl transition-all duration-500 group-hover:w-1.5" style={{background:`linear-gradient(180deg,${p.accent},transparent)`}}></div>
+                <div className="p-6 pl-7">
+                  {/* Header row */}
+                  <div className="flex items-start justify-between mb-5">
+                    {/* React icon circle */}
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{background:p.accentDim, border:`1px solid ${p.accent}30`}}>
+                      <i className="fab fa-react text-2xl" style={{color:p.accent}}></i>
+                    </div>
+                    <div className="flex flex-col items-end gap-1.5">
+                      <span className="text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full" style={{background:p.accentDim, color:p.accent}}>{p.tag}</span>
+                      <span className="text-xs font-mono text-muted opacity-50">{p.num}</span>
+                    </div>
+                  </div>
+                  {/* Title */}
+                  <h3 className="text-bright font-bold text-base mb-2 group-hover:transition-colors duration-300" style={{}}>{p.title}</h3>
+                  {/* Desc */}
+                  <p className="text-dim text-xs leading-relaxed font-light mb-5 line-clamp-2">{p.desc}</p>
+                  {/* Stack chips */}
+                  <div className="flex flex-wrap gap-1.5 mb-5">
+                    {p.stack.map(t => (
+                      <span key={t} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{background:'rgba(79,142,247,0.07)', border:'1px solid rgba(79,142,247,0.22)', color:'#eff6ff'}}>
+                        <i className={`${(TECH_ICONS[t]||TECH_ICONS.default).icon} text-[10px]`} style={{color:(TECH_ICONS[t]||TECH_ICONS.default).color}}></i>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  {/* Footer */}
+                  <div className="flex items-center gap-2 text-xs font-semibold" style={{color:p.accent}}>
+                    <span>View Live</span>
+                    <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform duration-300"></i>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+        {/* Dots */}
+        <div className="flex gap-2 mt-8 justify-center">
+          {PROJS.map((_, i) => (
+            <button key={i} onClick={() => { setActive(i); setOff(i*(cardW+24)); }}
+              className={`rounded-full transition-all duration-300 ${active===i ? 'w-6 h-2 bg-teal' : 'w-2 h-2 bg-muted/50'}`}></button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════ EDUCATION ══════════════════ */
+const EDUS = [
+  {
+    yr:'2015–2017', deg:'Master of Science', field:'Computer Science', school:'Sri Jayendra Saraswathy College of Arts & Science',
+    affiliation:'Bharathiar University', score:'78%', icon:'🎓',
+    highlights:['Data Structures & Algorithms','Software Engineering','Database Management Systems','Network Security & Cryptography'],
+    project:'Developed a web-based Student Record Management System using PHP & MySQL for the final thesis.'
+  },
+  {
+    yr:'2012–2015', deg:'Bachelor of Science', field:'Computer Science', school:'Sri Jayendra Saraswathy College of Arts & Science',
+    affiliation:'Bharathiar University', score:'78%', icon:'📚',
+    highlights:['C / C++ Programming','Operating Systems','Object-Oriented Programming (Java)','Web Technology & Internet'],
+    project:'Built a Library Management desktop app using Java Swing as the final year project.'
+  },
+];
+
+function Education() {
+  const ref = useRef(null);
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set('.edu-card-reveal', { opacity:0, y:80, rotateX:22, scale:.88 });
+    ScrollTrigger.create({
+      trigger: ref.current, start: 'top 80%', once: true,
+      onEnter: () => {
+        gsap.to('.edu-card-reveal', {
+          opacity:1, y:0, rotateX:0, scale:1,
+          stagger:{ each:.2, from:'start' },
+          duration:1.1, ease:'back.out(1.8)',
+          transformPerspective:1000,
+        });
+        // 3D tilt on each edu card
+        setTimeout(() => {
+          document.querySelectorAll('.edu-tilt').forEach(card => {
+            card.addEventListener('mousemove', e => {
+              const r = card.getBoundingClientRect();
+              const x = (e.clientX-r.left)/r.width -.5;
+              const y = (e.clientY-r.top) /r.height-.5;
+              gsap.to(card, { rotateX:-y*14, rotateY:x*14, scale:1.03,
+                transformPerspective:800, duration:.2, ease:'power2.out',
+                boxShadow:`${x*16}px ${-y*16}px 40px rgba(79,142,247,.22)` });
+              let shine = card.querySelector('.tilt-shine');
+              if (!shine) { shine=document.createElement('div'); shine.className='tilt-shine'; card.appendChild(shine); }
+              shine.style.background=`radial-gradient(circle at ${(x+.5)*100}% ${(y+.5)*100}%, rgba(255,255,255,.12) 0%, transparent 58%)`;
+              shine.style.opacity='1';
+            });
+            card.addEventListener('mouseleave', () => {
+              gsap.to(card, { rotateX:0, rotateY:0, scale:1, boxShadow:'none', duration:.6, ease:'elastic.out(1,.45)' });
+              const shine = card.querySelector('.tilt-shine');
+              if (shine) shine.style.opacity='0';
+            });
+          });
+        }, 700);
+      }
+    });
+  }, []);
+  return (
+    <section id="education" ref={ref} className="relative z-10 py-28">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center mb-16 edu-card-reveal">
+          <div className="sec-label justify-center mb-4"><span>Education</span></div>
+          <h2 className="text-4xl lg:text-5xl font-black text-bright mb-4">Academic <span className="hero-gradient">Background</span></h2>
+          <p className="text-dim max-w-lg mx-auto font-light">A strong computer science foundation across Bachelor's and Master's levels.</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6 mb-10 edu-grid">
+          {EDUS.map((e, i) => (
+            <div key={i} className="edu-card-reveal edu-tilt proj-card relative rounded-2xl p-7 overflow-hidden group flex flex-col">
+              <div className="absolute top-0 right-0 text-7xl opacity-5 font-black leading-none p-4">{e.icon}</div>
+              <div className="absolute inset-0 bg-gradient-to-br from-teal/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"></div>
+              <div className="text-xs font-mono text-teal mb-3 tracking-widest">{e.yr}</div>
+              <div className="text-bright font-bold text-lg mb-0.5">{e.deg}</div>
+              <div className="text-dim text-sm italic font-light mb-1">{e.field}</div>
+              <div className="text-dim text-xs leading-relaxed font-light mb-1">{e.school}</div>
+              <div className="text-xs font-semibold text-muted/70 tracking-wide mb-4">{e.affiliation}</div>
+              {e.highlights.length > 0 && (
+                <div className="mb-4">
+                  <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">Key Subjects</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {e.highlights.map((h, j) => (
+                      <span key={j} className="text-xs bg-white/5 border border-white/12 text-dim px-2 py-0.5 rounded-full">{h}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-baseline gap-2 mt-4">
+                <span className="text-3xl font-black gold-gradient">{e.score}</span>
+                <span className="text-muted text-xs uppercase tracking-wider">Aggregate</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* CERT */}
+        <div className="edu-card-reveal">
+          <div className="proj-card rounded-2xl p-7 flex flex-wrap items-center gap-6 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent pointer-events-none"></div>
+            <div className="text-5xl">🏅</div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-mono text-gold tracking-widest mb-1">CERTIFICATION · August 2023</div>
+              <div className="text-bright text-xl font-bold mb-1">MERN Stack Development</div>
+              <div className="text-dim text-sm font-light">Nschool Academy, Coimbatore, Tamil Nadu</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════ CONTACT ══════════════════ */
+function Contact() {
+  const ref = useRef(null);
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set('.contact-reveal', { opacity:0, y:50, rotateX:16, scale:.94 });
+    ScrollTrigger.create({
+      trigger: ref.current, start:'top 80%', once:true,
+      onEnter: () => {
+        gsap.to('.contact-reveal', {
+          opacity:1, y:0, rotateX:0, scale:1,
+          stagger:{ each:.1, from:'start' },
+          duration:.9, ease:'back.out(1.5)',
+          transformPerspective:800,
+        });
+        // 3D tilt on individual contact cards
+        setTimeout(() => {
+          document.querySelectorAll('.contact-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+              const r = card.getBoundingClientRect();
+              const x = (e.clientX-r.left)/r.width -.5;
+              const y = (e.clientY-r.top) /r.height-.5;
+              gsap.to(card, { rotateX:-y*10, rotateY:x*10, scale:1.025,
+                transformPerspective:700, duration:.2, ease:'power2.out' });
+            });
+            card.addEventListener('mouseleave', () =>
+              gsap.to(card, { rotateX:0, rotateY:0, scale:1, duration:.55, ease:'elastic.out(1,.5)' }));
+          });
+        }, 600);
+      }
+    });
+  }, []);
+  const contacts = [
+    { icon:'fas fa-phone', label:'Phone', val:'6379943278', href:'tel:6379943278', color:'text-teal' },
+    { icon:'fas fa-envelope', label:'Email', val:'karthikeyan210595@gmail.com', href:'mailto:karthikeyan210595@gmail.com', color:'text-rose' },
+    { icon:'fab fa-github', label:'GitHub', val:'karthik-paramasivam', href:'https://github.com/karthik-paramasivam', color:'text-bright' },
+    { icon:'fab fa-linkedin', label:'LinkedIn', val:'Karthikeyan P', href:'#', color:'text-blue-400' },
+    { icon:'fas fa-map-marker-alt', label:'Location', val:'Coimbatore, Tamil Nadu, India', href:null, color:'text-gold' },
+  ];
+  return (
+    <section id="contact" ref={ref} className="relative z-10 py-28 bg-card/50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 contact-reveal">
+          <div className="sec-label justify-center mb-4"><span>Contact</span></div>
+          <h2 className="text-4xl lg:text-5xl font-black text-bright mb-4">Let's <span className="hero-gradient">Connect</span></h2>
+          <p className="text-dim max-w-xl mx-auto font-light leading-relaxed">Open to frontend roles, freelance projects, and exciting collaborations. Let's build something extraordinary together.</p>
+        </div>
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Left big CTA */}
+          <div className="contact-reveal flex flex-col justify-center gap-6">
+            <div className="proj-card rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-teal/8 to-transparent pointer-events-none"></div>
+              <h3 className="text-2xl font-bold text-bright mb-3">Open to <span className="text-teal">exciting opportunities</span></h3>
+              <p className="text-dim font-light leading-relaxed mb-6">Whether it's a full-time position, a freelance project, or just a great conversation about frontend — I'd love to hear from you.</p>
+              <a href="mailto:karthikeyan210595@gmail.com" className="btn-teal inline-flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold">
+                <i className="fas fa-paper-plane"></i> Send a Message
+              </a>
+            </div>
+          </div>
+          {/* Contact cards */}
+          <div className="space-y-3">
+            {contacts.map(({ icon, label, val, href, color }, i) => {
+              const inner = (
+                <div className="contact-card reveal-item rounded-xl px-5 py-4 flex items-center gap-4 group">
+                  <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center transition-all duration-300 group-hover:border-teal/30 group-hover:bg-teal/10 flex-shrink-0`}>
+                    <i className={`${icon} ${color} text-sm`}></i>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-muted text-xs font-semibold tracking-widest uppercase mb-0.5">{label}</div>
+                    <div className="text-bright text-sm font-medium truncate">{val}</div>
+                  </div>
+                  {href && <i className="fas fa-arrow-right text-muted text-xs group-hover:text-teal group-hover:translate-x-1 transition-all duration-300"></i>}
+                </div>
+              );
+              return href
+                ? <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer" className="contact-reveal block">{inner}</a>
+                : <div key={label} className="contact-reveal">{inner}</div>;
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════ FOOTER ══════════════════ */
+
+
+/* ══════════════════ APP ══════════════════ */
+function App() {
+  useEffect(() => {
+    // Custom cursor
+    const dot = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    const pos = { x:0, y:0 }, rp = { x:0, y:0 };
+    const mv = e => { pos.x = e.clientX; pos.y = e.clientY; dot.style.left=e.clientX+'px'; dot.style.top=e.clientY+'px'; };
+    let raf;
+    const loop = () => {
+      rp.x += (pos.x - rp.x) * .12; rp.y += (pos.y - rp.y) * .12;
+      ring.style.left=rp.x+'px'; ring.style.top=rp.y+'px';
+      raf = requestAnimationFrame(loop);
+    };
+    window.addEventListener('mousemove', mv); loop();
+
+    // ── Geometric floating particles (triangles, diamonds, rings) ──
+    const geoContainer = document.getElementById('geo-particles');
+    if (geoContainer) {
+      const shapes = [
+        // SVG path, size range, color options, count
+        { type:'ring',    count:14 },
+        { type:'tri',     count:10 },
+        { type:'diamond', count:10 },
+        { type:'dot',     count:8  },
+      ];
+      const colors = [
+        'rgba(79,142,247,VAL)','rgba(124,58,237,VAL)',
+        'rgba(129,140,248,VAL)','rgba(37,99,235,VAL)',
+      ];
+      let total = 0;
+      shapes.forEach(({ type, count }) => {
+        for (let i = 0; i < count; i++) {
+          const el = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          const size = Math.random()*18+8;
+          const op   = (Math.random()*.18+.05).toFixed(2);
+          const col  = colors[Math.floor(Math.random()*colors.length)].replace('VAL', op);
+          const dur  = (Math.random()*12+6).toFixed(1);
+          const del  = -(Math.random()*14).toFixed(1);
+          const animName = total%3===0 ? 'geoFloat' : total%3===1 ? 'geoFloatB' : 'geoFloatC';
+          el.setAttribute('width', size);
+          el.setAttribute('height', size);
+          el.setAttribute('viewBox','0 0 24 24');
+          el.setAttribute('fill','none');
+          el.style.cssText = `position:fixed;top:${Math.random()*100}%;left:${Math.random()*100}%;pointer-events:none;z-index:0;--dur:${dur}s;--del:${del}s;--op:${op};animation:${animName} ${dur}s ease-in-out infinite ${del}s;`;
+          let path;
+          if (type === 'ring') {
+            path = document.createElementNS('http://www.w3.org/2000/svg','circle');
+            path.setAttribute('cx','12');path.setAttribute('cy','12');path.setAttribute('r','9');
+            path.setAttribute('stroke',col);path.setAttribute('stroke-width','1.5');
+          } else if (type === 'tri') {
+            path = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+            path.setAttribute('points','12,2 22,20 2,20');
+            path.setAttribute('stroke',col);path.setAttribute('stroke-width','1.2');path.setAttribute('fill','none');
+          } else if (type === 'diamond') {
+            path = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+            path.setAttribute('points','12,2 22,12 12,22 2,12');
+            path.setAttribute('stroke',col);path.setAttribute('stroke-width','1.2');path.setAttribute('fill','none');
+          } else {
+            path = document.createElementNS('http://www.w3.org/2000/svg','circle');
+            path.setAttribute('cx','12');path.setAttribute('cy','12');path.setAttribute('r','3');
+            path.setAttribute('fill',col);
+          }
+          el.appendChild(path);
+          geoContainer.appendChild(el);
+          total++;
+        }
+      });
+    }
+
+    // Cursor scale on interactive elements
+    const onEnter = () => { dot.style.width='18px'; dot.style.height='18px'; dot.style.opacity='.6'; };
+    const onLeave = () => { dot.style.width='10px'; dot.style.height='10px'; dot.style.opacity='1'; };
+    document.querySelectorAll('a,button,[role="button"]').forEach(el => {
+      el.addEventListener('mouseenter', onEnter);
+      el.addEventListener('mouseleave', onLeave);
+    });
+
+    return () => {
+      window.removeEventListener('mousemove', mv);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div className="font-poppins">
+      <Cursor />
+      <Navbar />
+      <Hero />
+      <Marquee />
+      <About />
+      <Skills />
+      <Experience />
+      <Projects />
+      <Education />
+      <Contact />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
